@@ -1,3 +1,5 @@
+import sys
+sys.setrecursionlimit(10**6)
 import cv2
 from cvzone.HandTrackingModule import HandDetector
 from cvzone.ClassificationModule import Classifier
