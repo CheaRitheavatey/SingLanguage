@@ -8,7 +8,7 @@ import time
 
 cap = cv2.VideoCapture(0) # 0 is the id number for web cam
 detector = HandDetector(maxHands=1)
-classifier = Classifier("Model/keras_model.h5", "labels.txt")
+classifier = Classifier("Model/keras_model.h5", "Model/labels.txt")
 
 offset = 20
 imgSize = 300
@@ -16,8 +16,11 @@ imgSize = 300
 # save image when press button
 folder =  "Data/Yes"
 counter = 0 # count the number of saved img
+
+labels = ["A", "B", "C", "Yes", "No", "I Love You", "Thank You"]
 while True:
     success, img = cap.read()
+    imgOutput = img.copy()
     hands, img = detector.findHands(img)
 
     if hands:
@@ -48,7 +51,9 @@ while True:
             wGap = math.ceil((imgSize - wCal) / 2)
             # put image white into image crop
             imgWhite[:, wGap:wCal + wGap] = imgResize
-            classifier.getPrediction(img)
+            prediction, index = classifier.getPrediction(imgWhite, draw=False)
+            # print(prediction, index)
+            
         # for width
         else:
             k = imgSize / w # stretch the width
@@ -61,12 +66,16 @@ while True:
             hGap = math.ceil((imgSize - hCal) / 2)
             # put image white into image crop
             imgWhite[hGap:hCal + hGap, :] = imgResize
+            prediction, index = classifier.getPrediction(imgWhite, draw=False)
 
+        cv2.rectangle(imgOutput, (x - offset,y - offset - 26), (x - offset + 100, y - offset), (0,255,0), cv2.FILLED)
+        cv2.putText(imgOutput, labels[index], (x,y-30), cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),2)
+        cv2.rectangle(imgOutput, (x - offset,y - offset), (x + w + offset, y + h + offset), (0,255,0),4)
 
         cv2.imshow("Image Crop", imgCrop)
         cv2.imshow("Image White", imgWhite)
 
-    cv2.imshow("Image", img)
+    cv2.imshow("Image", imgOutput)
     cv2.waitKey(2)
 
    
