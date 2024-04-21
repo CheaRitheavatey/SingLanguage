@@ -5,10 +5,14 @@ import numpy as np
 import math
 import time
 
+# plan continue:
+# 6. import the classifier
+# 7. get prediction and index
+# 8. get the output
 
 cap = cv2.VideoCapture(0) # 0 is the id number for web cam
 detector = HandDetector(maxHands=1)
-classifier = Classifier("Model/keras_model.h5", "Model/labels.txt")
+classifier = Classifier("Model/keras_model.h5", "Model/labels.txt") # 6
 
 offset = 20
 imgSize = 300
@@ -51,7 +55,7 @@ while True:
             wGap = math.ceil((imgSize - wCal) / 2)
             # put image white into image crop
             imgWhite[:, wGap:wCal + wGap] = imgResize
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
+            prediction, index = classifier.getPrediction(imgWhite, draw=False) # 7 
             # print(prediction, index)
             
         # for width
@@ -66,8 +70,9 @@ while True:
             hGap = math.ceil((imgSize - hCal) / 2)
             # put image white into image crop
             imgWhite[hGap:hCal + hGap, :] = imgResize
-            prediction, index = classifier.getPrediction(imgWhite, draw=False)
-
+            prediction, index = classifier.getPrediction(imgWhite, draw=False) # 7
+        
+        # 8 green color and text using the labels
         cv2.rectangle(imgOutput, (x - offset,y - offset - 26), (x - offset + 100, y - offset), (0,255,0), cv2.FILLED)
         cv2.putText(imgOutput, labels[index], (x,y-30), cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),2)
         cv2.rectangle(imgOutput, (x - offset,y - offset), (x + w + offset, y + h + offset), (0,255,0),4)
