@@ -30,11 +30,11 @@ while True:
         hand = hands[0] # hand[0] = 1 hand
         x,y,w,h = hand['bbox'] # give the value of where the hand is
 
-        # 3 make sure that it is the same size
+        # 3 make sure that it is center
         imgWhite = np.ones((imgSize,imgSize,3), np.uint8) * 255
 
        #crop the image
-       # 3
+       # 3 
         imgCrop = img[y - offset:y + h + offset, x - offset:x + w + offset]
         imageCropShape = imgCrop.shape # contain 3 values: height, width, channel
         
